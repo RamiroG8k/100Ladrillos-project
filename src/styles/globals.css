@@ -1,3 +1,42 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    body {
+        color: #3e3e3e;
+        font-family: 'Roboto', sans-serif;
+        font-size: 16px;
+        letter-spacing: normal;
+        line-height: 1.25;
+    }
+}
+
+@layer components {
+    .navbar {
+        @apply flex justify-between items-center lg:bg-white h-[72px] w-full 
+            border-b border-gray-200 py-3 px-6;
+    }
+    .input { 
+        @apply w-full py-[10px] px-2 rounded border border-gray-200 self-stretch 
+            flex-grow-0 flex focus:outline-none focus:border-2 focus:border-gray-300; 
+    }
+    .anchor {
+        @apply text-[#77c1ff] hover:text-[#3ca4fc];
+    }
+    .social-link {
+        /* TODO: Manage truly shadows */
+        @apply w-12 h-12 rounded p-[10px] border border-gray-200 shadow-sm opacity-90 
+            hover:scale-105 transition hover:opacity-100;
+    }
+    .progress-btn {
+        @apply rounded py-[10px] px-6 opacity-90 hover:opacity-100
+            transition disabled:bg-disabled disabled:text-disabled-dark;
+    }
+    .btn-secondary {
+        @apply border border-primary text-primary bg-primary-light;
+    }
+    .btn-primary {
+        @apply bg-primary text-white;
+    }
+}
