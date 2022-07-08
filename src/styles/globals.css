@@ -10,6 +10,16 @@
         letter-spacing: normal;
         line-height: 1.25;
     }
+
+    #rules li::before {
+        content: '';
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin-right: 8.5px;
+        border-radius: 50%;
+        background-color: attr(data-valid);
+    }
 }
 
 @layer components {
@@ -41,5 +51,14 @@
     }
     .progress-point {
         @apply w-2 h-2 rounded-full cursor-pointer;
+    }
+    .password-rules {
+        @apply text-xs text-disabled-dark tracking-[0.05px] leading-[1.67] w-[430px];
+    }
+    .rule-passed {
+        @apply before:bg-green-400 before:border-none;
+    }
+    .rule-unfinished {
+        @apply before:border before:border-disabled-dark;
     }
 }

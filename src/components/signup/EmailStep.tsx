@@ -1,7 +1,20 @@
+// Common
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRef, useState } from 'react';
+// Icons
+import { FaRegEyeSlash, FaRegEye } from 'react-icons/fa';
+
+const socialsAuth: Array<string> = [
+    'Google',
+    'Microsoft',
+    'Facebook'
+];
 
 const EmailStep = () => {
+    const [password, setPassword] = useState<string>('');
+    const [showPassword, setShowPassword] = useState<boolean>(false);
+
     return (
         <>
             <span className="font-bold text-lg">
@@ -23,8 +36,39 @@ const EmailStep = () => {
                 <label htmlFor="password" className="text-sm">
                     Ingresa una contraseña
                 </label>
-                <input type="password" id="password" name="password" autoComplete="password"
-                    className="input" placeholder="Contraseña" />
+                <div className="relative">
+                    <input type={showPassword ? 'text' : 'password'} minLength={6}
+                        id="password" name="password" autoComplete="password"
+                        className="input" placeholder="Contraseña" 
+                        onChange={({ target: { value } }) => setPassword(value)}/>
+                    <button type="button" onClick={() => setShowPassword(v => !v)}
+                        className="absolute bottom-2 right-2 p-1 opacity-80 hover:opacity-100">
+                        {showPassword ? <FaRegEye /> : <FaRegEyeSlash />}
+                    </button>
+                </div>
+                <div className="password-rules">
+                    <p>Por razones de seguridad tu contraseña debe tener las siguientes carateristicas:</p>
+                    <ul id="rules" className="">
+                        <li className={(password.length >= 6) ? 'rule-passed' : 'rule-unfinished'}>
+                            Mínimo 6 caracteres (letras, números y caracteres especiales).
+                        </li>
+                        <li>
+                            Mínimo 1 número.
+                        </li>
+                        <li>
+                            {"Mínimo 1 de estos caracteres especiales !”#$%&/()=?¿^*@,[]{ };:_><,.-|`+."}
+                        </li>
+                        <li>
+                            No tener la frase “100Ladrillos”.
+                        </li>
+                        <li>
+                            No tener mas de 3 caracteres idénticos en forma consecutiva (ej: aaa).
+                        </li>
+                        <li>
+                            No tener mas de 3 caracteres numéricos y/o letras en forma secuencial (ej: 123).
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div className="flex justify-between items-center">
                 <div className="w-20 h-[1px] bg-gray-200" />
@@ -32,24 +76,14 @@ const EmailStep = () => {
                 <div className="w-20 h-[1px] bg-gray-200" />
             </div>
             <div className="flex justify-evenly items-center">
-                <Link href="/">
-                    <a href="" className="social-link">
-                        <Image src="/assets/icons/Google-logo.webp"
-                            alt="Google logo" width={32} height={32} />
-                    </a>
-                </Link>
-                <Link href="/">
-                    <a href="" className="social-link">
-                        <Image src="/assets/icons/Microsoft-logo.webp"
-                            alt="Microsoft logo" width={32} height={32} />
-                    </a>
-                </Link>
-                <Link href="/">
-                    <a href="" className="social-link">
-                        <Image src="/assets/icons/Facebook-logo.webp"
-                            alt="Facebook logo" width={32} height={32} />
-                    </a>
-                </Link>
+                {socialsAuth.map((social: string) =>
+                    <Link key={social} passHref href="/">
+                        <a href="" className="social-link">
+                            <Image src={`/assets/icons/${social}-logo.webp`}
+                                alt={`${social} logo`} width={32} height={32} />
+                        </a>
+                    </Link>
+                )}
             </div>
         </>
     )
