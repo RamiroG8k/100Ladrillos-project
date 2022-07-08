@@ -6,6 +6,8 @@ import type { NextPage } from 'next';
 import { Navbar, ProgressButtons, ProgressPoints } from '@components/index';
 import { useState } from 'react';
 import { EmailStep, PhoneStep, PersonalInfo, Success } from '@components/signup';
+// Context
+import { SignupContext } from 'context';
 
 const Home: NextPage = () => {
 	const [step, setStep] = useState<number>(1);
@@ -32,22 +34,23 @@ const Home: NextPage = () => {
 			</Head>
 			<div className="bg-white w-screen h-screen">
 				<Navbar className="fixed z-10" />
-				<div className="flex flex-col lg:flex-row h-full">
-					<div className="flex max-w-[524px] bg-primary h-full">
-						<Image src="/assets/img/Background-img-angel.webp" priority
-							alt="100 Ladrillos logotipo" width={1572} height={1809}
-							objectFit="cover" />
-					</div>
-					<div className="flex flex-1 justify-center items-center">
-						<div className="flex flex-col gap-6 max-w-[320px]">
-							<MultiStepForm />
-							<ProgressButtons
-								onPrevious={() => console.log('PREV')}
-								onNext={() => console.log('NEXT')} />
-							<ProgressPoints />
+				<SignupContext.Provider value={{ step, setStep }}>
+					<div className="flex flex-col lg:flex-row h-full">
+						<div className="flex max-w-[524px] bg-primary h-full">
+							<Image src="/assets/img/Background-img-angel.webp" priority
+								alt="100 Ladrillos logotipo" width={1572} height={1809}
+								objectFit="cover" />
+						</div>
+						<div className="flex flex-1 justify-center items-center">
+							<form onSubmit={(e) => e.preventDefault()}
+								className="flex flex-col gap-6 max-w-[320px]">
+								<MultiStepForm />
+								<ProgressButtons />
+								<ProgressPoints/>
+							</form>
 						</div>
 					</div>
-				</div>
+				</SignupContext.Provider>
 			</div>
 		</>
 	)

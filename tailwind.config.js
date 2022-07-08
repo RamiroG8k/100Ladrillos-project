@@ -13,6 +13,9 @@ module.exports = {
         disabled: {
           DEFAULT: "#eaeaea",
           dark: "#8c8c8c"
+        },
+        dark: {
+          DEFAULT: "#3e3e3e",
         }
       },
       screens: {

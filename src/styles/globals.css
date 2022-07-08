@@ -39,4 +39,7 @@
     .btn-primary {
         @apply bg-primary text-white;
     }
+    .progress-point {
+        @apply w-2 h-2 rounded-full cursor-pointer;
+    }
 }
