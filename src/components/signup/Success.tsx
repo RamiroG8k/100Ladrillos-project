@@ -2,14 +2,15 @@
 import Link from 'next/link';
 import { SignupContext } from 'context';
 import { useState, useContext, useEffect } from 'react';
-// Services
+// Services | Utils
 import { getProfile } from 'services/signup';
+import { errorMessages } from '@utils/index';
+import { IProfile } from '@types';
 // Icons
 import { BsCheck } from 'react-icons/bs';
-import { IProfile } from '@types';
 
 const Success = () => {
-    const { formGroup, setFormGroup, toast } = useContext<any>(SignupContext);
+    const { toast } = useContext<any>(SignupContext);
 
     const [profile, setProfile] = useState<IProfile>({
         id: '',
@@ -32,15 +33,11 @@ const Success = () => {
         try {
             const { data } = await getProfile();
             setProfile(data);
+        } catch (error: any) {
+            const { response: { status: code } } = error;
 
-        } catch ({ response: { status } }: any) {
-            if (status === 401) {
-                toast.error('Hubo un problema con su autenticacion.', { duration: 3000, position: 'top-center' });
-            } else if (status === 409) {
-                toast.error('Aun no has completado tu perfil.', { duration: 3000, position: 'top-center' });
-            } else {
-                toast.error('Ha ocurrido un error al establecer contacto con el servidor.', { duration: 3000, position: 'top-center' });
-            }
+            const msg = errorMessages.email[code];
+            toast.error(msg, { duration: 3000, position: 'top-center' });
         }
     }
 

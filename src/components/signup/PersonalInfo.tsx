@@ -7,6 +7,7 @@ import { AlreadyGotAccount } from '@components/shared';
 // Services
 import { setProfile } from 'services/signup';
 import { ProfileBody } from '@types';
+import { errorMessages } from '@utils/index';
 
 const PersonalInfo = ({ onSubmit }: any) => {
     const { setStep, toast, setFormGroup, formGroup } = useContext<any>(SignupContext);
@@ -24,23 +25,22 @@ const PersonalInfo = ({ onSubmit }: any) => {
         try {
             // Avoids to send empty fields
             if (Object.values(formData).every(x => x !== '')) {
+                // Stores in context to keep track of it
                 const { ...newProps } = formData;
                 setFormGroup((f: any) => ({ ...f, ...newProps }));
             }
             const { data }: any = await setProfile(formData);
             if (data) {
-                toast.success('Informacion actualizada con exito.', { duration: 3000, position: 'top-center' });
+                toast.success('Informacion actualizada con exito.',
+                    { duration: 3000, position: 'top-center' });
                 // 1 => Curp step, 2  => Default step (success);
                 onSubmit(isMobile ? 1 : 2);
             }
-        } catch ({ response: { status } }: any) {
-            if (status === 400) {
-                toast.error('La informacion no coincide con datos de perfil.', { duration: 3000, position: 'top-center' });
-            } else if (status === 401) {
-                toast.error('Hubo un problema con su autenticacion.', { duration: 3000, position: 'top-center' });
-            } else {
-                toast.error('Ha ocurrido un error al registrar el token.', { duration: 3000, position: 'top-center' });
-            }
+        } catch (error: any) {
+            const { response: { status: code } } = error;
+
+            const msg = errorMessages.email[code];
+            toast.error(msg, { duration: 3000, position: 'top-center' });
         }
     }
 

@@ -1,8 +1,14 @@
+type IForm = {
+    email: string;
+    password: string;
+    confirmPassword: string;
+};
+
 type Rule = {
     customRegex: RegExp;
     name: string;
     negative?: boolean;
-}
+};
 
 type SignUpBody = {
     email: string;
@@ -37,4 +43,4 @@ type IProfile = {
     }
 };
 
-export type { Rule, SignUpBody, PhoneBody, VerifyBody, ProfileBody, IProfile };
+export type { IForm, Rule, SignUpBody, PhoneBody, VerifyBody, ProfileBody, IProfile };

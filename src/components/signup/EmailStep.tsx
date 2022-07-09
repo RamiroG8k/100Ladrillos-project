@@ -1,29 +1,25 @@
 // Common
 import Image from 'next/image';
 import Link from 'next/link';
+// Context
 import { SignupContext } from 'context';
 import { useState, useContext } from 'react';
 // Components
 import { FormInput } from '@components/signup';
 import { AlreadyGotAccount } from '@components/shared';
-// Icons
+// Services | Constants
 import { signUp } from 'services/signup';
-// Constants
 import { socialsAuth, rulesRegex } from '../../constants/email';
+import { IForm } from '@types';
+import { errorMessages } from '@utils/index';
 
-type IForm = {
-    email: string;
-    password: string;
-    confirmPassword: string;
-};
-
-const EmailStep = ({ onSubmit }: any) => {
+const EmailStep = () => {
     const { setStep, formGroup, setFormGroup, toast } = useContext<any>(SignupContext);
     // Handles when to show two password inputs
     const [emailDirty, setEmailDirty] = useState<boolean>(false);
     // State to manage equal password validation
     const [equalPasswords, setEqualPasswords] = useState<boolean>(true);
-    // Form data
+    // Form data, initial state if has been previously registereds
     const [formData, setFormData] = useState<IForm>({
         email: formGroup.email ?? '',
         password: formGroup.password ?? '',
@@ -37,26 +33,27 @@ const EmailStep = ({ onSubmit }: any) => {
         try {
             // Avoids to send empty fields
             if (Object.values(formData).every(x => x !== '')) {
+                // Stores in context to keep track of it
                 setFormGroup((f: any) => ({ ...f, ...formData }));
             }
             const { data: { token } }: any = await signUp({ email, password });
-
             localStorage.setItem('brick-token', token);
-            setStep((v: number) => v + 1);
 
-        } catch ({ response: { status } }: any) {
-            if (status === 400) {
-                toast.error('La contraseña no cumple con los requisitos mínimos de seguridad.', { duration: 3000, position: 'top-center' });
-            } else if (status === 409) {
-                toast.error('El correo electrónico ya está registrado.', { duration: 3000, position: 'top-center' });
-            } else {
-                toast.error('Ha ocurrido un error al registrarse.', { duration: 3000, position: 'top-center' });
-            }
+            setStep((v: number) => v + 1);
+        } catch (error: any) {
+            const { response: { status: code } } = error;
+
+            const msg = errorMessages.email[code];
+            toast.error(msg, { duration: 3000, position: 'top-center' });
         }
     }
 
-    const onChange = (e: any) => {
-        setFormData((v: IForm) => ({ ...v, [e.target.name]: e.target.value }));
+    /**
+     * It takes an event object and sets the form data to the target value.
+     * @param {any}  - IForm - the type of the form data
+     */
+    const onChange = ({ target }: any) => {
+        setFormData((v: IForm) => ({ ...v, [target.name]: target.value }));
     };
 
     return (
