@@ -15,8 +15,7 @@ const ProgressButtons: React.FC = () => {
                 type="submit" className="progress-btn btn-secondary">
                 Anterior
             </button>}
-            <button 
-                type="submit" className="progress-btn btn-primary">
+            <button type="submit" className="progress-btn btn-primary">
                 Siguiente
             </button>
         </div>

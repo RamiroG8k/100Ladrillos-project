@@ -22,8 +22,17 @@ const Home: NextPage = () => {
 				return <PersonalInfo />;
 			default:
 				return <Success />;
-		}
+		};
 	}
+
+	// const handleSubmit = (event: any) => {
+	// 	event.preventDefault();
+
+	// 	const data = new FormData(event.target);
+	//     const form = Object.fromEntries(data.entries());
+
+	// 	console.log(form);
+	// }
 
 	return (
 		<>
@@ -43,12 +52,11 @@ const Home: NextPage = () => {
 						</div>
 						<div className="flex flex-1 h-auto w-full justify-center overflow-scroll">
 							<div className="">
-								<form onSubmit={(e) => e.preventDefault()}
-									className="flex flex-col gap-6 max-w-[320px] py-[100px]">
+								<div className="flex flex-col gap-6 py-[100px]">
 									<MultiStepForm />
-									<ProgressButtons />
+									{/* <ProgressButtons /> */}
 									<ProgressPoints />
-								</form>
+								</div>
 							</div>
 						</div>
 					</div>
