@@ -10,14 +10,14 @@ import { EmailStep, PhoneStep, PersonalInfo, Success } from '@components/signup'
 import { SignupContext } from 'context';
 
 const Home: NextPage = () => {
-	const [step, setStep] = useState<number>(1);
+	const [step, setStep] = useState<number>(2);
 
 	const MultiStepForm = () => {
 		switch (step) {
 			case 1:
 				return <EmailStep onSubmit={() => setStep(v => v + 1)} />;
 			case 2:
-				return <PhoneStep />;
+				return <PhoneStep onSubmit={() => setStep(v => v + 1)} />;
 			case 3:
 				return <PersonalInfo />;
 			default:
@@ -36,12 +36,12 @@ const Home: NextPage = () => {
 				<Navbar className="fixed lg:relative z-10" />
 				<SignupContext.Provider value={{ step, setStep }}>
 					<div className="flex flex-col lg:flex-row h-full">
-						<div className="flex max-w-[524px] bg-primary h-full">
+						<div className="flex max-w-[524px] h-full">
 							<Image src="/assets/img/Background-img-angel.webp" priority
 								alt="100 Ladrillos logotipo" width={1572} height={1809}
 								objectFit="cover" />
 						</div>
-						<div className="flex flex-1 h-auto w-full justify-center overflow-scroll">
+						<div className="flex flex-1 h-auto w-full justify-center items-center overflow-scroll">
 							<div className="">
 								<div className="flex flex-col gap-6 py-[100px]">
 									<MultiStepForm />
@@ -53,7 +53,13 @@ const Home: NextPage = () => {
 				</SignupContext.Provider>
 			</div>
 		</>
-	)
+	);
 }
 
-export default Home
+export async function getStaticProps() {
+	return {
+		props: {},
+	};
+}
+
+export default Home;

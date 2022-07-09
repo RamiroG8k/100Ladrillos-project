@@ -13,7 +13,7 @@ const FormInput = (props: any) => {
     }
 
     return (
-        <div className="flex flex-col gap-2">
+        <div className={`flex flex-col gap-2 ${inputProps.parentstyles ?? ''}`}>
             <label htmlFor={id} className="text-sm">{label}</label>
             <div className="relative">
                 <input {...inputProps} id={id} className="input" autoComplete="off"

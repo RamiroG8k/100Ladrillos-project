@@ -27,10 +27,12 @@ const EmailStep = ({ onSubmit }: any) => {
 
         try {
             const res: any = await signUp({ email, password });
+            console.log('Response', res);
+
             localStorage.setItem('brick-token', res.token);
             onSubmit();
         } catch (error) {
-            console.log(error);
+            console.log('Error', error);
         }
     }
 
