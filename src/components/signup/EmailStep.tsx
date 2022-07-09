@@ -39,14 +39,19 @@ const EmailStep = ({ onSubmit }: any) => {
             if (Object.values(formData).every(x => x !== '')) {
                 setFormGroup((f: any) => ({ ...f, ...formData }));
             }
-            const res: any = await signUp({ email, password });
-            console.log('Response', {...res});
+            const { data: { token } }: any = await signUp({ email, password });
 
-            // localStorage.setItem('brick-token', res.token);
-            // setStep((v: number) => v + 1);
-        } catch (error: any) {
-            // toast.error('Error, solicitud incorrecta 😵‍💫', { position: 'top-center' });
-            // console.log('Error', error.statuscode);
+            localStorage.setItem('brick-token', token);
+            setStep((v: number) => v + 1);
+
+        } catch ({ response: { status } }: any) {
+            if (status === 400) {
+                toast.error('La contraseña no cumple con los requisitos mínimos de seguridad.', { duration: 3000, position: 'top-center' });
+            } else if (status === 409) {
+                toast.error('El correo electrónico ya está registrado.', { duration: 3000, position: 'top-center' });
+            } else {
+                toast.error('Ha ocurrido un error al registrarse.', { duration: 3000, position: 'top-center' });
+            }
         }
     }
 

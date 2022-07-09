@@ -30,14 +30,17 @@ const Success = () => {
 
     const handleInfo = async () => {
         try {
-            // const response = await getProfile();
-            // console.log(response);
-    
-            // setProfile(response);
-        } catch (error) {
-            
-            toast.error('Error, solicitud incorrecta 😵‍💫', { position: 'top-center' });
-            console.log(error);
+            const { data } = await getProfile();
+            setProfile(data);
+
+        } catch ({ response: { status } }: any) {
+            if (status === 401) {
+                toast.error('Hubo un problema con su autenticacion.', { duration: 3000, position: 'top-center' });
+            } else if (status === 409) {
+                toast.error('Aun no has completado tu perfil.', { duration: 3000, position: 'top-center' });
+            } else {
+                toast.error('Ha ocurrido un error al establecer contacto con el servidor.', { duration: 3000, position: 'top-center' });
+            }
         }
     }
 

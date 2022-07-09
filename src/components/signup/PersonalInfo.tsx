@@ -9,9 +9,14 @@ import { setProfile } from 'services/signup';
 import { ProfileBody } from '@types';
 
 const PersonalInfo = ({ onSubmit }: any) => {
-    const [formData, setFormData] = useState<ProfileBody>({ name: '', secondName: '', firstLastName: '', secondLastName: '' });
-    const [isMobile, setIsMobile] = useState<boolean>(false);
     const { setStep, toast, setFormGroup, formGroup } = useContext<any>(SignupContext);
+    const [formData, setFormData] = useState<ProfileBody>({
+        name: formGroup.name ?? '',
+        secondName: formGroup.secondName ?? '',
+        firstLastName: formGroup.firstLastName ?? '',
+        secondLastName: formGroup.secondLastName ?? '',
+    });
+    const [isMobile, setIsMobile] = useState<boolean>(false);
 
     const handleSubmit = async (event: any) => {
         event.preventDefault();
@@ -22,15 +27,20 @@ const PersonalInfo = ({ onSubmit }: any) => {
                 const { ...newProps } = formData;
                 setFormGroup((f: any) => ({ ...f, ...newProps }));
             }
-            // const res: any = await setProfile(formData);
-            // console.log(res);
-
-            // 1 => Curp step, 2  => Default step (success);
-            onSubmit(isMobile ? 1 : 2);
-        } catch (error) {
-
-            toast.error('Error, solicitud incorrecta 😵‍💫', { position: 'top-center' });
-            console.log(error);
+            const { data }: any = await setProfile(formData);
+            if (data) {
+                toast.success('Informacion actualizada con exito.', { duration: 3000, position: 'top-center' });
+                // 1 => Curp step, 2  => Default step (success);
+                onSubmit(isMobile ? 1 : 2);
+            }
+        } catch ({ response: { status } }: any) {
+            if (status === 400) {
+                toast.error('La informacion no coincide con datos de perfil.', { duration: 3000, position: 'top-center' });
+            } else if (status === 401) {
+                toast.error('Hubo un problema con su autenticacion.', { duration: 3000, position: 'top-center' });
+            } else {
+                toast.error('Ha ocurrido un error al registrar el token.', { duration: 3000, position: 'top-center' });
+            }
         }
     }
 

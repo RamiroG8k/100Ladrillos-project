@@ -10,31 +10,35 @@ import Link from 'next/link';
 import { AlreadyGotAccount } from '@components/shared';
 
 const PhoneStep = ({ onSubmit }: any) => {
-    // Form data
-    const [phone, setPhone] = useState<number | any>();
-    const [modalVisible, setModalVisible] = useState(false);
     const { setStep, toast, setFormGroup, formGroup } = useContext<any>(SignupContext);
+    // Form data
+    const [phone, setPhone] = useState<string>(formGroup.phone ?? '');
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
 
     const handleSubmit = async (event: any) => {
         event.preventDefault();
 
         try {
             // Avoids to send empty fields
-            setModalVisible(() => true);
-            if (phone) {
+            if (phone !== formGroup.phone) {
                 setFormGroup((f: any) => ({ ...f, phone }));
             }
-
-            // const res: any = await setPhoneNumber({ number: phone });
-            // console.log(res);
-            // onSubmit();
-        } catch (error) {
-            toast.error('Error, solicitud incorrecta 😵‍💫', { position: 'top-center' });
-            console.log(error);
+            const { data }: any = await setPhoneNumber({ number: phone });
+            if (data) {
+                setModalVisible((v) => !v);
+            }
+        } catch ({ response: { status } }: any) {
+            if (status === 400) {
+                toast.error('Parece que el numero no coincide como telefonico. .', { duration: 3000, position: 'top-center' });
+            } else if (status === 401) {
+                toast.error('Hubo un problema con su autenticacion.', { duration: 3000, position: 'top-center' });
+            } else {
+                toast.error('Ha ocurrido un error al registrarse.', { duration: 3000, position: 'top-center' });
+            }
         }
     }
     const VerifyPhone = () => {
-        const [pinCode, setPinCode] = useState('');
+        const [pinCode, setPinCode] = useState<any>();
 
         const handleChange = ({ target }: any) => {
             const { maxLength, value, name } = target;
@@ -59,12 +63,21 @@ const PhoneStep = ({ onSubmit }: any) => {
 
         const handleVerify = async () => {
             try {
-                // const res: any = await verifyNumber({ token: pinCode });
-                // console.log(res);
-                onSubmit();
-            } catch (error) {
-                toast.error('Error, solicitud incorrecta 😵‍💫', { position: 'top-center' });
-                console.log(error);
+                const { data }: any = await verifyNumber({ token: pinCode });
+                if (data.phone.verified) {
+                    toast.success('El numero de telefono ha sido verificado.', { duration: 3000, position: 'top-center' });
+                    onSubmit();
+                }
+            } catch ({ response: { status } }: any) {
+                if (status === 400) {
+                    toast.error('El codigo debe ser de 4 digitos', { duration: 3000, position: 'top-center' });
+                }else if (status === 401) {
+                    toast.error('Codigo invalido, intenta de nuevo.', { duration: 3000, position: 'top-center' });
+                } else if (status === 409) {
+                    toast.error('Aun no tienes un numero telefonico asignado.', { duration: 3000, position: 'top-center' });
+                } else {
+                    toast.error('Ha ocurrido un error al registrar el token.', { duration: 3000, position: 'top-center' });
+                }
             }
         }
 

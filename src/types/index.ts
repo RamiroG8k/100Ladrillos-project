@@ -37,5 +37,4 @@ type IProfile = {
     }
 };
 
-
 export type { Rule, SignUpBody, PhoneBody, VerifyBody, ProfileBody, IProfile };
