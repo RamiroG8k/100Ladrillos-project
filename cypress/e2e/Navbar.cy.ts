@@ -28,4 +28,6 @@ describe('Navbar responsiveness', () => {
 		cy.get('.hamburger-menu > svg').should('be.visible');
 		cy.get('.logo-mini').should('be.visible');
 	});
-})
+});
+
+export {};
