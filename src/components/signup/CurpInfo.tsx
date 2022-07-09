@@ -5,7 +5,7 @@ import { SignupContext } from 'context';
 import FormInput from '@components/signup/FormInput';
 import { AlreadyGotAccount } from '@components/shared';
 
-const CurpInfo = ({ onSubmit }: any) => {
+const CurpInfo = () => {
     const [curp, setCurp] = useState<number | any>();
     const { setStep, setFormGroup, formGroup } = useContext<any>(SignupContext);
 
@@ -15,14 +15,10 @@ const CurpInfo = ({ onSubmit }: any) => {
         try {
             // Avoids to send empty fields
             if (curp) {
+                // Stores in context to keep track of it
                 setFormGroup((f: any) => ({ ...f, curp }));
             }
-            console.log(curp);
-
-            // const res: any = await setProfile();
-            // console.log(res);
-
-            onSubmit();
+            setStep((s: number) => s + 1);
         } catch (error) {
             console.log(error);
         }

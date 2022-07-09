@@ -15,16 +15,11 @@ const Home: NextPage = () => {
 
 	const MultiStepForm = () => {
 		switch (step) {
-			case 1:
-				return <EmailStep />;
-			case 2:
-				return <PhoneStep />;
-			case 3:
-				return <PersonalInfo onSubmit={(stps: number) => setStep(v => v + stps)} />;
-			case 4:
-				return <CurpInfo onSubmit={() => setStep(v => v + 1)} />;
-			default:
-				return <Success />;
+			case 1: return <EmailStep />;
+			case 2: return <PhoneStep />;
+			case 3: return <PersonalInfo />;
+			case 4: return <CurpInfo />;
+			default: return <Success />;
 		};
 	}
 

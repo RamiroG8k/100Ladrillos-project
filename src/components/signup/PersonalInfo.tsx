@@ -9,7 +9,7 @@ import { setProfile } from 'services/signup';
 import { ProfileBody } from '@types';
 import { errorMessages } from '@utils/index';
 
-const PersonalInfo = ({ onSubmit }: any) => {
+const PersonalInfo = () => {
     const { setStep, toast, setFormGroup, formGroup } = useContext<any>(SignupContext);
     const [formData, setFormData] = useState<ProfileBody>({
         name: formGroup.name ?? '',
@@ -34,7 +34,7 @@ const PersonalInfo = ({ onSubmit }: any) => {
                 toast.success('Informacion actualizada con exito.',
                     { duration: 3000, position: 'top-center' });
                 // 1 => Curp step, 2  => Default step (success);
-                onSubmit(isMobile ? 1 : 2);
+                setStep((s: number) => isMobile ? s + 1 : s + 2);
             }
         } catch (error: any) {
             const { response: { status: code } } = error;
