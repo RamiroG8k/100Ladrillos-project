@@ -23,6 +23,6 @@
       "@hooks": ["./hooks/index.ts"],
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/cypress/integration/app.spec.js"],
   "exclude": ["node_modules"]
 }

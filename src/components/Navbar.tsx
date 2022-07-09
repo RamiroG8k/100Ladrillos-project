@@ -1,5 +1,7 @@
 import Image from 'next/image';
 import React from 'react';
+// Icons
+import { FiMenu } from 'react-icons/fi';
 
 type NavbarProps = {
     className?: string;
@@ -8,11 +10,14 @@ type NavbarProps = {
 const Navbar: React.FC<NavbarProps> = ({ className }: NavbarProps) => {
     return (
         <div className={`navbar ${className}`}>
-            <div className="hidden lg:block">
+            <button className="hamburger-menu absolute left-4 sm:hidden text-white text-3xl">
+                <FiMenu />
+            </button>
+            <div className="hidden lg:block logo-full">
                 <Image src="/assets/img/100Ladrillos-logo-full.svg" priority
                     alt="100 Ladrillos logotipo" width={126} height={50} />
             </div>
-            <div className="block lg:hidden">
+            <div className="block lg:hidden logo-full">
                 <Image src="/assets/img/100Ladrillos-logo-icon.svg" priority
                     alt="100 Ladrillos logotipo" width={36} height={30} />
             </div>
