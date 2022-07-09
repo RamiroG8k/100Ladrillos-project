@@ -5,26 +5,37 @@ import { useState } from 'react';
 import { socialsAuth, rulesRegex } from '../../constants/email';
 // Icons
 import FormInput from '@components/signup/FormInput';
+import { signUp } from 'services/signup';
 
-const EmailStep = () => {
+type IForm = {
+    email: string;
+    password: string;
+    confirmPassword: string;
+};
+
+const EmailStep = ({ onSubmit }: any) => {
     // Handles when to show two password inputs
     const [emailDirty, setEmailDirty] = useState<boolean>(false);
     // State to manage equal password validation
     const [equalPasswords, setEqualPasswords] = useState<boolean>(true);
     // Form data
-    const [formData, setFormData] = useState<any>({ email: '', password: '', confirmPassword: '' });
+    const [formData, setFormData] = useState<IForm>({ email: '', password: '', confirmPassword: '' });
 
-    const handleSubmit = (event: any) => {
+    const handleSubmit = async (event: any) => {
         event.preventDefault();
+        const { email, password } = formData;
 
-        const data = new FormData(event.target);
-        const form = Object.fromEntries(data.entries());
-
-        console.log(form);
+        try {
+            const res: any = await signUp({ email, password });
+            localStorage.setItem('brick-token', res.token);
+            onSubmit();
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     const onChange = (e: any) => {
-        setFormData((v: any) => ({ ...v, [e.target.name]: e.target.value }));
+        setFormData((v: IForm) => ({ ...v, [e.target.name]: e.target.value }));
     };
 
     return (
@@ -60,7 +71,7 @@ const EmailStep = () => {
                     </ul>
                 </div>}
             </div>
-            {emailDirty && <div className="flex flex-col gap-2">
+            {emailDirty ? <div className="flex flex-col gap-2">
                 <FormInput type="password" minLength={6} id="confirmPassword" name="confirmPassword"
                     className="input" placeholder="Contraseña" required onChange={onChange}
                     label="Confirma tu contraseña"
@@ -68,22 +79,23 @@ const EmailStep = () => {
                 {!equalPasswords && <p className="text-xs text-red-400">
                     Las contraseñas deben coincidir
                 </p>}
-            </div>}
-            <div className="flex justify-between items-center">
-                <div className="w-20 h-[1px] bg-gray-200" />
-                <span className="text-sm">o regístrate con:</span>
-                <div className="w-20 h-[1px] bg-gray-200" />
-            </div>
-            <div className="flex justify-evenly items-center">
-                {socialsAuth.map((social: string) =>
-                    <Link key={social} passHref href="/">
-                        <a href="" className="social-link">
-                            <Image src={`/assets/icons/${social}-logo.webp`}
-                                alt={`${social} logo`} width={32} height={32} />
-                        </a>
-                    </Link>
-                )}
-            </div>
+            </div> : <>
+                <div className="flex justify-between items-center">
+                    <div className="w-20 h-[1px] bg-gray-200" />
+                    <span className="text-sm">o regístrate con:</span>
+                    <div className="w-20 h-[1px] bg-gray-200" />
+                </div>
+                <div className="flex justify-evenly items-center">
+                    {socialsAuth.map((social: string) =>
+                        <Link key={social} passHref href="/">
+                            <a href="" className="social-link">
+                                <Image src={`/assets/icons/${social}-logo.webp`}
+                                    alt={`${social} logo`} width={32} height={32} />
+                            </a>
+                        </Link>
+                    )}
+                </div>
+            </>}
             <div className="flex items-center gap-4">
                 <button disabled={!Object.values(formData).every(x => x !== '')}
                     type="submit" className="progress-btn btn-primary">

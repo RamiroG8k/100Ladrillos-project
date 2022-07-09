@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import type { NextPage } from 'next';
 // Components
-import { Navbar, ProgressButtons, ProgressPoints } from '@components/index';
+import { Navbar, ProgressPoints } from '@components/index';
 import { useState } from 'react';
 import { EmailStep, PhoneStep, PersonalInfo, Success } from '@components/signup';
 // Context
@@ -15,7 +15,7 @@ const Home: NextPage = () => {
 	const MultiStepForm = () => {
 		switch (step) {
 			case 1:
-				return <EmailStep />;
+				return <EmailStep onSubmit={() => setStep(v => v + 1)} />;
 			case 2:
 				return <PhoneStep />;
 			case 3:
@@ -24,15 +24,6 @@ const Home: NextPage = () => {
 				return <Success />;
 		};
 	}
-
-	// const handleSubmit = (event: any) => {
-	// 	event.preventDefault();
-
-	// 	const data = new FormData(event.target);
-	//     const form = Object.fromEntries(data.entries());
-
-	// 	console.log(form);
-	// }
 
 	return (
 		<>
@@ -54,7 +45,6 @@ const Home: NextPage = () => {
 							<div className="">
 								<div className="flex flex-col gap-6 py-[100px]">
 									<MultiStepForm />
-									{/* <ProgressButtons /> */}
 									<ProgressPoints />
 								</div>
 							</div>
