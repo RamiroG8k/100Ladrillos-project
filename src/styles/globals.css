@@ -41,7 +41,7 @@
         @apply flex justify-center items-center;
     }
     .navbar {
-        @apply flex justify-center sm:justify-between items-center lg:bg-white h-[72px] w-full 
+        @apply flex justify-center lg:justify-between items-center lg:bg-white h-[72px] w-full 
             border-b border-gray-200 py-3 px-6;
     }
     .main-container {

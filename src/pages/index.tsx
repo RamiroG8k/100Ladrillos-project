@@ -48,7 +48,7 @@ const Home: NextPage = () => {
 				<Navbar className="fixed lg:relative z-10" />
 				<CustomContextProvider>
 					<div className="flex flex-col lg:flex-row h-full">
-						<div className="flex lg:max-w-[524px] h-full z-0 bg-red-500	">
+						<div className="flex lg:max-w-[524px] h-full z-0">
 							<Image src="/assets/img/Background-img-angel.webp" priority
 								alt="100 Ladrillos logotipo" width={1572} height={1809}
 								objectFit="cover" />
