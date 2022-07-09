@@ -8,9 +8,11 @@ module.exports = {
       colors: {
         primary: {
           DEFAULT: "#f03c43",
-          light: "#ffdada"
+          light: "#ffdada",
+          lighter: "#fff9f9"
         },
         disabled: {
+          light: "#bdbcbc",
           DEFAULT: "#eaeaea",
           dark: "#8c8c8c"
         },

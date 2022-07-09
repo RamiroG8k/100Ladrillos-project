@@ -1,11 +1,15 @@
 // Common
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
-import { socialsAuth, rulesRegex } from '../../constants/email';
+import { SignupContext } from 'context';
+import { useState, useContext } from 'react';
+// Components
+import { FormInput } from '@components/signup';
+import { AlreadyGotAccount } from '@components/shared';
 // Icons
-import FormInput from '@components/signup/FormInput';
 import { signUp } from 'services/signup';
+// Constants
+import { socialsAuth, rulesRegex } from '../../constants/email';
 
 type IForm = {
     email: string;
@@ -14,25 +18,35 @@ type IForm = {
 };
 
 const EmailStep = ({ onSubmit }: any) => {
+    const { setStep, formGroup, setFormGroup, toast } = useContext<any>(SignupContext);
     // Handles when to show two password inputs
     const [emailDirty, setEmailDirty] = useState<boolean>(false);
     // State to manage equal password validation
     const [equalPasswords, setEqualPasswords] = useState<boolean>(true);
     // Form data
-    const [formData, setFormData] = useState<IForm>({ email: '', password: '', confirmPassword: '' });
+    const [formData, setFormData] = useState<IForm>({
+        email: formGroup.email ?? '',
+        password: formGroup.password ?? '',
+        confirmPassword: formGroup.confirmPassword ?? ''
+    });
 
     const handleSubmit = async (event: any) => {
         event.preventDefault();
         const { email, password } = formData;
 
         try {
+            // Avoids to send empty fields
+            if (Object.values(formData).every(x => x !== '')) {
+                setFormGroup((f: any) => ({ ...f, ...formData }));
+            }
             const res: any = await signUp({ email, password });
-            console.log('Response', res);
+            console.log('Response', {...res});
 
-            localStorage.setItem('brick-token', res.token);
-            onSubmit();
-        } catch (error) {
-            console.log('Error', error);
+            // localStorage.setItem('brick-token', res.token);
+            // setStep((v: number) => v + 1);
+        } catch (error: any) {
+            // toast.error('Error, solicitud incorrecta 😵‍💫', { position: 'top-center' });
+            // console.log('Error', error.statuscode);
         }
     }
 
@@ -52,13 +66,13 @@ const EmailStep = ({ onSubmit }: any) => {
             </p>
             <FormInput type="email" id="email" name="email" autoFocus
                 placeholder="tu@correo.com" required onChange={onChange}
-                onKeyDownCapture={() => setEmailDirty(true)}
+                onKeyDownCapture={() => setEmailDirty(true)} defaultValue={formGroup.email}
                 label="¿Cuál es tu correo electrónico?"
             />
             <div className="flex flex-col gap-2">
                 <FormInput type="password" minLength={6} id="password" name="password"
-                    className="input" placeholder="Contraseña" required onChange={onChange}
-                    label="Ingresa una contraseña" />
+                    placeholder="Contraseña" required onChange={onChange}
+                    label="Ingresa una contraseña" defaultValue={formGroup.password} />
                 {emailDirty && <div className="password-rules">
                     <p>Por razones de seguridad tu contraseña debe tener las siguientes carateristicas:</p>
                     <ul id="rules" className="">
@@ -73,15 +87,23 @@ const EmailStep = ({ onSubmit }: any) => {
                     </ul>
                 </div>}
             </div>
-            {emailDirty ? <div className="flex flex-col gap-2">
-                <FormInput type="password" minLength={6} id="confirmPassword" name="confirmPassword"
-                    className="input" placeholder="Contraseña" required onChange={onChange}
-                    label="Confirma tu contraseña"
-                    onBlur={({ target: { value } }: any) => setEqualPasswords(value === formData.password)} />
-                {!equalPasswords && <p className="text-xs text-red-400">
-                    Las contraseñas deben coincidir
-                </p>}
-            </div> : <>
+            {emailDirty || formGroup.email ? <>
+                <div className="flex flex-col gap-2">
+                    <FormInput type="password" minLength={6} id="confirmPassword" name="confirmPassword"
+                        placeholder="Contraseña" required onChange={onChange}
+                        label="Confirma tu contraseña" defaultValue={formGroup.confirmPassword}
+                        onBlur={({ target: { value } }: any) => setEqualPasswords(value === formData.password)} />
+                    {!equalPasswords && <p className="text-xs text-red-400">
+                        Las contraseñas deben coincidir
+                    </p>}
+                </div>
+                <div className="flex items-center gap-4">
+                    <button disabled={!Object.values(formData).every(x => x !== '') && !formGroup.email}
+                        type="submit" className="progress-btn btn-primary">
+                        Siguiente
+                    </button>
+                </div>
+            </> : <>
                 <div className="flex justify-between items-center">
                     <div className="w-20 h-[1px] bg-gray-200" />
                     <span className="text-sm">o regístrate con:</span>
@@ -97,13 +119,9 @@ const EmailStep = ({ onSubmit }: any) => {
                         </Link>
                     )}
                 </div>
+                <AlreadyGotAccount />
             </>}
-            <div className="flex items-center gap-4">
-                <button disabled={!Object.values(formData).every(x => x !== '')}
-                    type="submit" className="progress-btn btn-primary">
-                    Siguiente
-                </button>
-            </div>
+
         </form>
     )
 }

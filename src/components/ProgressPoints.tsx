@@ -9,7 +9,7 @@ const ProgressPoints = () => {
             {Array.from({ length: 4 }).map((_, i: number) =>
                 <div key={i}
                     // onClick={() => setStep(i + 1)}
-                    className={`progress-point ${i < step ? 'bg-dark' : 'bg-disabled'}`} />
+                    className={`progress-point ${i + 1 === step ? 'bg-dark' : 'bg-disabled'}`} />
             )}
         </div>
     );
